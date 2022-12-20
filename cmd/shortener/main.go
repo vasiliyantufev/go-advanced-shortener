@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"io"
 	"net/http"
 	"strconv"
 )
@@ -20,9 +19,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	rtr := mux.NewRouter()
+	rtr.HandleFunc("/", BodyHandler).Methods("POST")
 	rtr.HandleFunc("/", index)
 	rtr.HandleFunc("/get_url", QueryHandler).Methods("GET")
-	rtr.HandleFunc("/", BodyHandler).Methods("POST")
 
 	fmt.Printf("Starting application on port %v\n", portNumber)
 	http.ListenAndServe(portNumber, rtr)
@@ -42,24 +41,45 @@ func QueryHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(201)
-	w.Write([]byte(urls[intVar]))
+	//w.WriteHeader(201)
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	// если пароль не верен, указываем код ошибки в заголовке
+	w.WriteHeader(307)
+	fmt.Fprintln(w, []byte(urls[intVar]))
+
+	//w.Write([]byte(urls[intVar]))
+	// пишем в тело ответа
+	//fmt.Fprintln(w, url)
 }
 
 func BodyHandler(w http.ResponseWriter, r *http.Request) {
-	// читаем Body
-	url, err := io.ReadAll(r.Body)
 
+	// читаем Body
+	//url, err := io.ReadAll(r.Body)
+	//
+	//// обрабатываем ошибку
+	//if err != nil {
+	//	http.Error(w, err.Error(), 500)
+	//	return
+	//}
+
+	url := r.FormValue("url")
 	// обрабатываем ошибку
-	if err != nil {
-		http.Error(w, err.Error(), 500)
+	if url == "" {
+		http.Error(w, "The url parameter is missing", http.StatusBadRequest)
 		return
 	}
 
 	urls = append(urls, string(url))
 	//w.WriteHeader(307)
 	//w.Write([]byte(url))
-	w.WriteHeader(http.StatusCreated)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(url))
+	//w.Header().Set("Content-Type", "application/json")
+	//w.WriteHeader(201)
+	//w.Write([]byte(url))
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	// если пароль не верен, указываем код ошибки в заголовке
+	w.WriteHeader(201)
+	// пишем в тело ответа
+	fmt.Fprintln(w, url)
 }
