@@ -45,7 +45,8 @@ func QueryHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	// если пароль не верен, указываем код ошибки в заголовке
 	w.WriteHeader(307)
-	fmt.Fprintln(w, []byte(urls[intVar]))
+	//fmt.Fprintln(w, []byte(urls[intVar]))
+	http.Redirect(w, r, urls[intVar], http.StatusSeeOther)
 
 	//w.Write([]byte(urls[intVar]))
 	// пишем в тело ответа
