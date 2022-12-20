@@ -62,5 +62,4 @@ func BodyHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(url))
-	return
 }
