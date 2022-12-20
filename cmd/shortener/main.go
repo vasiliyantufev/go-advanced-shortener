@@ -22,7 +22,7 @@ func main() {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/", index)
 	rtr.HandleFunc("/get_url", QueryHandler).Methods("GET")
-	rtr.HandleFunc("/create", BodyHandler).Methods("POST")
+	rtr.HandleFunc("/", BodyHandler).Methods("POST")
 
 	fmt.Printf("Starting application on port %v\n", portNumber)
 	http.ListenAndServe(portNumber, rtr)
@@ -57,7 +57,10 @@ func BodyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urls = append(urls, string(url))
-
-	w.WriteHeader(307)
+	//w.WriteHeader(307)
+	//w.Write([]byte(url))
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(url))
+	return
 }
