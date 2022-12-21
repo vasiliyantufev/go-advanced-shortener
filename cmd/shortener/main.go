@@ -11,7 +11,6 @@ const portNumber = ":8080"
 
 var urls []string
 
-// HelloWorld — обработчик запроса.
 func index(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("<h1>Index</h1>"))
 }
@@ -19,50 +18,27 @@ func index(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	rtr := mux.NewRouter()
-	rtr.HandleFunc("/", BodyHandler).Methods("POST")
+	rtr.HandleFunc("/", PostHandler).Methods("POST")
 	rtr.HandleFunc("/", index)
-	rtr.HandleFunc("/get_url", QueryHandler).Methods("GET")
+	rtr.HandleFunc("/{id:[0-9]+}", GetHandler)
 
 	fmt.Printf("Starting application on port %v\n", portNumber)
 	http.ListenAndServe(portNumber, rtr)
 }
 
-func QueryHandler(w http.ResponseWriter, r *http.Request) {
-	// извлекаем фрагмент id= из URL запроса search?query=something
-	id := r.URL.Query().Get("id")
-	if id == "" {
-		http.Error(w, "The id parameter is missing", http.StatusBadRequest)
-		return
-	}
+func GetHandler(w http.ResponseWriter, r *http.Request) {
 
-	intVar, err := strconv.Atoi(id)
+	vars := mux.Vars(r)
+	intVar, err := strconv.Atoi(vars["id"])
+	// обрабатываем ошибку
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
-	//w.WriteHeader(201)
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	// если пароль не верен, указываем код ошибки в заголовке
-	w.WriteHeader(307)
-	//fmt.Fprintln(w, []byte(urls[intVar]))
-	http.Redirect(w, r, urls[intVar], http.StatusSeeOther)
-
-	//w.Write([]byte(urls[intVar]))
-	// пишем в тело ответа
-	//fmt.Fprintln(w, url)
+	http.Redirect(w, r, urls[intVar], 307)
 }
 
-func BodyHandler(w http.ResponseWriter, r *http.Request) {
-
-	// читаем Body
-	//url, err := io.ReadAll(r.Body)
-	//
-	//// обрабатываем ошибку
-	//if err != nil {
-	//	http.Error(w, err.Error(), 500)
-	//	return
-	//}
+func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	url := r.FormValue("url")
 	// обрабатываем ошибку
@@ -72,14 +48,7 @@ func BodyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urls = append(urls, string(url))
-	//w.WriteHeader(307)
-	//w.Write([]byte(url))
-	//w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(201)
-	//w.Write([]byte(url))
-
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	// если пароль не верен, указываем код ошибки в заголовке
 	w.WriteHeader(201)
 	// пишем в тело ответа
 	fmt.Fprintln(w, url)
