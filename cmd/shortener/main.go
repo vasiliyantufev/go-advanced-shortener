@@ -40,7 +40,7 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 
-	url := r.FormValue("url")
+	url := r.FormValue("URL")
 	// обрабатываем ошибку
 	if url == "" {
 		http.Error(w, "The url parameter is missing", http.StatusBadRequest)
