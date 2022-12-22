@@ -63,14 +63,18 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//urls = append(urls, string(url))
 
+	//par := strings.Trim(url.URL, "\n")
+
 	// устанавливаем заголовок Content-Type
 	// для передачи клиенту информации, кодированной в JSON
 	//w.Header().Set("content-type", "application/json")
 	// устанавливаем статус-код 200
 	w.WriteHeader(http.StatusCreated)
+	//w.Write([]byte(par))
+	w.Write([]byte(url.URL))
 	//пишем тело ответа
 	//w.Write([]byte(name.URL))
-	fmt.Fprintln(w, url.URL)
+	//fmt.Fprintln(w, par)
 
 	//url := r.FormValue("URL")
 	// обрабатываем ошибку
