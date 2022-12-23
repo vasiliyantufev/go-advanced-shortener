@@ -28,7 +28,7 @@ func main() {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/", PostHandler).Methods("POST")
 	rtr.HandleFunc("/", index)
-	rtr.HandleFunc("/{id:[0-9]+}", GetHandler)
+	rtr.HandleFunc("/{id:[0-9]+}", GetHandler).Methods("GET")
 
 	fmt.Printf("Starting application on port %v\n", portNumber)
 	http.ListenAndServe(portNumber, rtr)
