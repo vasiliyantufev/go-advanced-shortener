@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -66,20 +65,23 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	//var urls map[string]string
 
 	resp, err := ioutil.ReadAll(r.Body)
-	var url Url
+
+	//w.Write([]byte(resp))
+	//var url Url
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	json.Unmarshal(resp, &url)
+	//json.Unmarshal(resp, &url)
 
 	short := shorting()
 
 	//urls["kkk"] = "jjj"
 
-	urls[short] = url.URL
+	//urls[short] = url.URL
+	urls[short] = string(resp)
 
 	//rp, err :=
 	//urls = append(urls, url.URL)
