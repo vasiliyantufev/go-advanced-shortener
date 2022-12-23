@@ -5,18 +5,27 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
-	"strconv"
 )
 
 const portNumber = ":8080"
+const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-var urls []string
+var urls = make(map[string]string)
 
 // declaring a struct
 type Url struct {
 	// defining struct variables
 	URL string
+}
+
+func shorting() string {
+	b := make([]byte, 5)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+	return string(b)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +37,8 @@ func main() {
 	rtr := mux.NewRouter()
 	rtr.HandleFunc("/", PostHandler).Methods("POST")
 	rtr.HandleFunc("/", index)
-	rtr.HandleFunc("/{id:[0-9]+}", GetHandler).Methods("GET")
+	rtr.HandleFunc("/{id}", GetHandler).Methods("GET")
+	//rtr.HandleFunc("/{id:[0-9]+}", GetHandler).Methods("GET")
 
 	fmt.Printf("Starting application on port %v\n", portNumber)
 	http.ListenAndServe(portNumber, rtr)
@@ -36,17 +46,20 @@ func main() {
 
 func GetHandler(w http.ResponseWriter, r *http.Request) {
 
-	vars := mux.Vars(r)
-	intVar, err := strconv.Atoi(vars["id"])
-	// обрабатываем ошибку
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	short := mux.Vars(r)
+
+	if short["id"] == "" {
+		http.Error(w, "The query parameter is missing", http.StatusBadRequest)
 		return
 	}
-	http.Redirect(w, r, urls[intVar], http.StatusTemporaryRedirect)
+
+	link := urls[short["id"]]
+	http.Redirect(w, r, link, http.StatusTemporaryRedirect)
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
+
+	//var urls map[string]string
 
 	resp, err := ioutil.ReadAll(r.Body)
 	var url Url
@@ -58,8 +71,14 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(resp, &url)
 
+	short := shorting()
+
+	//urls["kkk"] = "jjj"
+
+	urls[short] = url.URL
+
 	//rp, err :=
-	urls = append(urls, url.URL)
+	//urls = append(urls, url.URL)
 
 	//urls = append(urls, string(url))
 
@@ -71,7 +90,10 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	// устанавливаем статус-код 200
 	w.WriteHeader(http.StatusCreated)
 	//w.Write([]byte(par))
-	w.Write([]byte(url.URL))
+
+	//w.Write([]byte(url.URL))
+	w.Write([]byte(short))
+
 	//пишем тело ответа
 	//w.Write([]byte(name.URL))
 	//fmt.Fprintln(w, par)
