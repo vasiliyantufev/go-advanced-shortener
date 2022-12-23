@@ -38,7 +38,7 @@ func main() {
 	rtr.HandleFunc("/", PostHandler).Methods("POST")
 	rtr.HandleFunc("/", index)
 	rtr.HandleFunc("/{id}", GetHandler).Methods("GET")
-	///rtr.HandleFunc("/{id:[0-9]+}", GetHandler).Methods("GET")
+	////rtr.HandleFunc("/{id:[0-9]+}", GetHandler).Methods("GET")
 
 	fmt.Printf("Starting application on port %v\n", portNumber)
 	http.ListenAndServe(portNumber, rtr)
