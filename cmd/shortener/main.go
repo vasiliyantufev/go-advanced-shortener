@@ -54,7 +54,11 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	link := urls[short["id"]]
-	http.Redirect(w, r, link, http.StatusTemporaryRedirect)
+
+	w.WriteHeader(http.StatusTemporaryRedirect)
+	w.Write([]byte(link))
+
+	//http.Redirect(w, r, link, http.StatusTemporaryRedirect)
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
