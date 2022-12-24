@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"net/http"
 )
@@ -66,7 +66,8 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	//var urls map[string]string
 
-	resp, err := ioutil.ReadAll(r.Body)
+	//resp, err := ioutil.ReadAll(r.Body)
+	resp, err := io.ReadAll(r.Body)
 
 	//w.Write([]byte(resp))
 	//var url Url
