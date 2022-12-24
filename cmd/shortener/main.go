@@ -54,12 +54,11 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	link := urls[short["id"]]
 	//loc := "http://" + r.Host + "/" + short["id"]
 
+	w.Header().Set("Location", link)
 	w.WriteHeader(http.StatusTemporaryRedirect)
-	//w.Header().Set("Location", link)
-	w.Header().Add("Location", link)
 
+	//w.Header().Add("Location", link)
 	//w.Write([]byte(link))
-
 	//http.Redirect(w, r, link, http.StatusTemporaryRedirect)
 }
 
