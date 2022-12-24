@@ -13,12 +13,6 @@ const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 var urls = make(map[string]string)
 
-// declaring a struct
-type Url struct {
-	// defining struct variables
-	URL string
-}
-
 func shorting() string {
 	b := make([]byte, 5)
 	for i := range b {
