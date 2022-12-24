@@ -46,7 +46,6 @@ func main() {
 func GetHandler(w http.ResponseWriter, r *http.Request) {
 
 	short := mux.Vars(r)
-
 	if short["id"] == "" {
 		http.Error(w, "The query parameter is missing", http.StatusBadRequest)
 		return
@@ -78,27 +77,16 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 	short := shorting()
 
-	//urls["kkk"] = "jjj"
-
 	//urls[short] = url.URL
 	urls[short] = string(resp)
 
-	//rp, err :=
-	//urls = append(urls, url.URL)
+	link := "http://" + r.Host + "/" + short
 
-	//urls = append(urls, string(url))
-
-	//par := strings.Trim(url.URL, "\n")
-
-	// устанавливаем заголовок Content-Type
-	// для передачи клиенту информации, кодированной в JSON
-	//w.Header().Set("content-type", "application/json")
-	// устанавливаем статус-код 200
 	w.WriteHeader(http.StatusCreated)
 	//w.Write([]byte(par))
-
 	//w.Write([]byte(url.URL))
-	w.Write([]byte(short))
+
+	w.Write([]byte(link))
 
 	//пишем тело ответа
 	//w.Write([]byte(name.URL))
