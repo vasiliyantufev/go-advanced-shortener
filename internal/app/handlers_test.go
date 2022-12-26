@@ -1,6 +1,9 @@
 package app
 
 import (
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -44,21 +47,23 @@ func TestIndexHandler(t *testing.T) {
 
 func TestGetHandler(t *testing.T) {
 
-	//short := shorting()
-	//urls[short] = string(testURL)
-	//
-	//req, err := http.NewRequest("GET", "http://127.0.0.1:8080/" + short, nil)
-	//if err != nil {
-	//	t.Fatal(err)
-	//}
-	//rr := httptest.NewRecorder()
-	//handler := http.HandlerFunc(GetHandler)
-	//handler.ServeHTTP(rr, req)
-	//
-	//if status := rr.Code; status != http.StatusTemporaryRedirect {
-	//	t.Errorf("handler returned wrong status code: got %v want %v",
-	//		status, http.StatusCreated)
-	//}
+	short := shorting()
+	urls[short] = string(testURL)
+
+	w := httptest.NewRecorder()
+	r := mux.NewRouter()
+	r.HandleFunc("/{id}", GetHandler).Methods("GET")
+	//Greeter("Hello").AddRoute(r)
+	r.ServeHTTP(w, httptest.NewRequest("GET", "http://127.0.0.1:8080/" + short, nil))
+
+	loc := w.Header().Get("Location")
+	status := w.Code
+
+	assert.Equal(t, loc, testURL,
+		fmt.Sprintf("Incorrect location. Expect %s, got %s", loc, testURL))
+
+	assert.Equal(t, status, http.StatusTemporaryRedirect,
+		fmt.Sprintf("Incorrect status. Expect %v, got %v", status, http.StatusInternalServerError))
 }
 
 func TestPostHandler(t *testing.T) {
