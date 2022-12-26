@@ -7,6 +7,8 @@ import (
 	"testing"
 )
 
+const testUrl = "https://rambler.com/"
+
 func TestIndexHandler(t *testing.T) {
 
 	// Создаем запрос с указанием нашего хендлера. Нам не нужно
@@ -42,20 +44,32 @@ func TestIndexHandler(t *testing.T) {
 
 func TestGetHandler(t *testing.T) {
 
+	//short := shorting()
+	//urls[short] = string(testUrl)
+	//
+	//req, err := http.NewRequest("GET", "http://127.0.0.1:8080/" + short, nil)
+	//if err != nil {
+	//	t.Fatal(err)
+	//}
+	//rr := httptest.NewRecorder()
+	//handler := http.HandlerFunc(GetHandler)
+	//handler.ServeHTTP(rr, req)
+	//
+	//if status := rr.Code; status != http.StatusTemporaryRedirect {
+	//	t.Errorf("handler returned wrong status code: got %v want %v",
+	//		status, http.StatusCreated)
+	//}
 }
 
 func TestPostHandler(t *testing.T) {
 
-	url := "https://rambler.com/"
-
-	req, err := http.NewRequest("POST", "/", strings.NewReader(url))
+	req, err := http.NewRequest("POST", "/", strings.NewReader(testUrl))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(PostHandler)
-
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusCreated {
@@ -64,20 +78,3 @@ func TestPostHandler(t *testing.T) {
 	}
 }
 
-
-//tests := []struct {
-//	name  string
-//	value string
-//	want  string
-//}{
-//	{name: "Correct", value: "<h1>Index</h1>", want: "<h1>Index</h1>"},
-//}
-//
-//
-//
-//for _, tt := range tests {
-//	t.Run(tt.name, func(t *testing.T) {
-//		assert.Equal(t, tt.value, tt.want,
-//			fmt.Sprintf("Incorrect result. Expect %s, got %s", tt.want, tt.value))
-//	})
-//}
