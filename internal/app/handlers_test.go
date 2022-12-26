@@ -28,25 +28,6 @@ func TestIndexHandler(t *testing.T) {
 		fmt.Sprintf("Incorrect status. Expect %v, got %v", status, http.StatusOK))
 }
 
-func TestGetHandler(t *testing.T) {
-
-	short := shorting()
-	urls[short] = string(testURL)
-
-	w := httptest.NewRecorder()
-	r := NewRouter()
-	r.ServeHTTP(w, httptest.NewRequest("GET", "http://127.0.0.1:8080/" + short, nil))
-
-	loc := w.Header().Get("Location")
-	status := w.Code
-
-	assert.Equal(t, loc, testURL,
-		fmt.Sprintf("Incorrect location. Expect %s, got %s", loc, testURL))
-
-	assert.Equal(t, status, http.StatusTemporaryRedirect,
-		fmt.Sprintf("Incorrect status. Expect %v, got %v", status, http.StatusInternalServerError))
-}
-
 func TestPostHandler(t *testing.T) {
 
 	w := httptest.NewRecorder()
@@ -59,3 +40,21 @@ func TestPostHandler(t *testing.T) {
 		fmt.Sprintf("Incorrect status. Expect %v, got %v", status, http.StatusCreated))
 }
 
+func TestGetHandler(t *testing.T) {
+
+	short := shorting()
+	data.Put(short, string(testURL))
+
+	w := httptest.NewRecorder()
+	r := NewRouter()
+	r.ServeHTTP(w, httptest.NewRequest("GET", "http://127.0.0.1:8080/"+short, nil))
+
+	loc := w.Header().Get("Location")
+	status := w.Code
+
+	assert.Equal(t, loc, testURL,
+		fmt.Sprintf("Incorrect location. Expect %s, got %s", loc, testURL))
+
+	assert.Equal(t, status, http.StatusTemporaryRedirect,
+		fmt.Sprintf("Incorrect status. Expect %v, got %v", status, http.StatusInternalServerError))
+}

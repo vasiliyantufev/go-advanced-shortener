@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-var urls = make(map[string]string)
+var data = NewDM()
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -21,7 +21,12 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link := urls[short["id"]]
+	link, ok := data.Get(short["id"])
+	if !ok {
+		http.Error(w, "Link not found", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Location", link)
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }
@@ -35,7 +40,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	short := shorting()
-	urls[short] = string(resp)
+	data.Put(short, string(resp))
 
 	link := "http://" + r.Host + "/" + short
 	w.WriteHeader(http.StatusCreated)
