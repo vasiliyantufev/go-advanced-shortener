@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"io"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 var urls = make(map[string]string)
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("<h1>Index</h1>"))
 }
 
@@ -27,9 +27,6 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Print(r)
-
 
 	resp, err := io.ReadAll(r.Body)
 	if err != nil {
