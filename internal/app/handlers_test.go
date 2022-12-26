@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-const testUrl = "https://rambler.com/"
+const testURL = "https://rambler.com/"
 
 func TestIndexHandler(t *testing.T) {
 
@@ -45,7 +45,7 @@ func TestIndexHandler(t *testing.T) {
 func TestGetHandler(t *testing.T) {
 
 	//short := shorting()
-	//urls[short] = string(testUrl)
+	//urls[short] = string(testURL)
 	//
 	//req, err := http.NewRequest("GET", "http://127.0.0.1:8080/" + short, nil)
 	//if err != nil {
@@ -63,7 +63,7 @@ func TestGetHandler(t *testing.T) {
 
 func TestPostHandler(t *testing.T) {
 
-	req, err := http.NewRequest("POST", "/", strings.NewReader(testUrl))
+	req, err := http.NewRequest("POST", "/", strings.NewReader(testURL))
 	if err != nil {
 		t.Fatal(err)
 	}
