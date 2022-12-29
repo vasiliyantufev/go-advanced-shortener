@@ -27,7 +27,15 @@ func (data *DataMap) Put(id string, o string) {
 func (data *DataMap) Get(id string) (o string, b bool) {
 	//мьютекс блокировка с общим доступом для чтение
 	data.mx.RLock()
-	defer data.mx.RLock()
+	defer data.mx.RUnlock()
 	o, b = data.Data[id]
+	return
+}
+
+//проверяем существует ли элемент в map
+func ExistElement(id string) (b bool) {
+	data.mx.RLock()
+	defer data.mx.RUnlock()
+	_, b = data.Data[id]
 	return
 }

@@ -3,14 +3,19 @@ package app
 import (
 	"github.com/gorilla/mux"
 	"io"
+	"log"
 	"net/http"
 )
 
 var data = NewDM()
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("<h1>Index</h1>"))
+	_, err := w.Write([]byte("<h1>Index</h1>"))
+	if err != nil {
+		log.Fatal(w)
+	}
 }
 
 func GetHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,7 +28,7 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 
 	link, ok := data.Get(short["id"])
 	if !ok {
-		http.Error(w, "Link not found", http.StatusInternalServerError)
+		http.Error(w, "Link not found", http.StatusBadRequest)
 		return
 	}
 

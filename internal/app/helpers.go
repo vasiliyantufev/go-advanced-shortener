@@ -9,5 +9,10 @@ func shorting() string {
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
+
+	check := ExistElement(string(b))
+	if check {
+		shorting()
+	}
 	return string(b)
 }
