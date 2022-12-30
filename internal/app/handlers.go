@@ -44,7 +44,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	short := shorting()
+	short := shorting(string(resp))
 	data.Put(short, string(resp))
 
 	link := "http://" + r.Host + "/" + short
