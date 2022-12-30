@@ -42,7 +42,7 @@ func TestPostHandler(t *testing.T) {
 
 func TestGetHandler(t *testing.T) {
 
-	short := shorting()
+	short := shorting(testURL)
 	data.Put(short, string(testURL))
 
 	w := httptest.NewRecorder()
